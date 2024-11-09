@@ -1,52 +1,80 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, Platform, PermissionsAndroid } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import EditScreenInfo from '@/components/EditScreenInfo';
-import GetLocation from 'react-native-get-location'
+import * as Location from 'expo-location';
 
 const three = () => {
-  let lat = 0;
-  let lon= 0;
+  const [lat, setLat] = useState<number | null>(null);
+  const [lon, setLon] = useState<number | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  GetLocation.getCurrentPosition({
-    enableHighAccuracy: true,
-    timeout: 60000,
-  })
-    .then(location => {
-      console.log(location);
-      lat = location.latitude;
-      lon = location.longitude;
-    })
-  .catch(error => {
-    const { code, message } = error;
-    console.warn(code, message);
-})
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: "Location Permission",
+              message: "This app needs access to your location",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            setErrorMsg("Location permission denied");
+            return;
+          }
+        } else {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg("Location permission denied");
+            return;
+          }
+        }
 
-return (
-  <View style={styles.container}>
-  
-    <MapView
-      style={styles.map}
-      initialRegion={{
-        latitude: lat, // Replace with your latitude
-        longitude: lon, // Replace with your longitude
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
-    >
-      <Marker
-        coordinate={{
-          latitude: 37.78825, // Replace with your latitude
-          longitude: -122.4324, // Replace with your longitude
-        }}
-        title={"My Location"}
-        description={"This is where I am"}
-      />
-    </MapView>
-    <EditScreenInfo path="app/(tabs)/three.tsx" />
-  </View>
-);
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
 
+        setLat(location.coords.latitude);
+        setLon(location.coords.longitude);
+      } catch (error) {
+        console.error("Error getting location permission or fetching location:", error);
+        
+      }
+    };
+
+    requestLocationPermission();
+  }, []);
+  console.log(lat)
+  console.log(lon)
+  return (
+    <View style={styles.container}>
+      {lat !== null && lon !== null ? (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: lat,
+            longitude: lon,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker
+            coordinate={{ latitude: lat, longitude: lon }}
+            title={"My Location"}
+            description={"This is where I am"}
+          />
+        </MapView>
+      ) : (
+        <Text>{errorMsg ? `Error: ${errorMsg}` : "Loading..."}</Text>
+      )}
+      <EditScreenInfo path="app/(tabs)/three.tsx" />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -54,15 +82,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
   map: {
     width: "100%",
