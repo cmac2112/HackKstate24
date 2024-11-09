@@ -24,3 +24,6 @@ start: npx expo start
 
 React native routing
 https://www.npmjs.com/package/react-native-maps-directions
+
+get location
+https://www.npmjs.com/package/react-native-get-location?activeTab=readme
