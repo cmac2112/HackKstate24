@@ -220,10 +220,10 @@ export const WeatherProvider: React.FC<WeatherProviderProps> = ({
 };
 
 function CheckForStorm(minX: number, minY: number, maxX: number, maxY: number, locationX: number, locationY: number){
-if(locationX >= minX && locationX <= maxX && locationY >= minY && locationY <= maxY){
-  return true;
-}
-else{
-  return false;
-}
+  if(locationX >= minX && locationX <= maxX && locationY >= minY && locationY <= maxY){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
