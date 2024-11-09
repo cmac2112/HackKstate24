@@ -1,10 +1,63 @@
+import { StyleSheet, View, Text, Button, Platform, PermissionsAndroid, Linking } from "react-native";
+import * as Location from 'expo-location';
+import { WeatherProvider } from '@/context/GetData';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { useEffect } from 'react';
+import { useWeather } from '@/context/GetData';
 import {ImageBackground, Image } from 'react-native';
 
 export default function TabOneScreen() {
+  const { origin, setOrigin, setErrorMsg, sendLocalNotification } = useWeather();
+
+  useEffect(() => {
+    sendLocalNotification();
+    const requestLocationPermission = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: "Location Permission",
+              message: "This app needs access to your location",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            setErrorMsg("Location permission denied");
+            return;
+          }
+        } else {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg("Location permission denied");
+            return;
+          }
+        }
+
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+
+        setOrigin({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        console.error("Error getting location permission or fetching location:", error);
+        if (error instanceof Error) {
+          setErrorMsg(error.message);
+        } else {
+          setErrorMsg("An unknown error occurred");
+        }
+      }
+    };
+
+    requestLocationPermission();
+  }, []);
   const [buttonColor, setButtonColor] = useState('#007bff'); // Initial blue color
   const [infoText, setInfoText] = useState(
     'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'
@@ -37,6 +90,11 @@ export default function TabOneScreen() {
   };
 
   return (
+    <WeatherProvider>
+    <View style={styles.container}>
+      <Text style={styles.title}>Tab  testsrio</Text>
+      <View style={styles.separator} />
+      <EditScreenInfo path="app/(tabs)/index.tsx" />
     <ImageBackground
       source={require('./assets/HomeBackground.png')} // Path to your PNG image
       style={styles.background}
@@ -58,6 +116,7 @@ export default function TabOneScreen() {
         <Text style={styles.buttonText}>{ButtonText}</Text>
       </TouchableOpacity>
     </View>
+    </WeatherProvider>
     </ImageBackground>
   );
 }

@@ -13,8 +13,6 @@ https://api.weather.gov/alerts/active?area=OK
 map apis?:
 https://wiki.openstreetmap.org/wiki/Points_of_interest
 
-Leaflet routing
-https://www.qed42.com/insights/navigation-with-leaflet-maps
 
 install expo cli
 
@@ -25,5 +23,4 @@ start: npx expo start
 React native routing
 https://www.npmjs.com/package/react-native-maps-directions
 
-get location
-https://www.npmjs.com/package/react-native-get-location?activeTab=readme
+schools, governemnt buildings, hospital
