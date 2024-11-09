@@ -1,11 +1,15 @@
 import { StyleSheet } from 'react-native';
-
+import {ImageBackground, Image } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function TabOneScreen() {
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require('./assets/storm.png')} // Path to your PNG image
+      style={styles.background}
+    >
+    <View style={styles.overlay}>
       <Text style={styles.title}>About the App</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       
@@ -13,11 +17,12 @@ export default function TabOneScreen() {
         guiding you to the nearest shelter with clear, real-time directions. Stay prepared 
         and safe with this app. </Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        
+
       <Text style = {styles.infoParagraph}>
       Leave the App running in the background to get notifications.
       </Text>
     </View>
+    </ImageBackground>
   );
 }
 
@@ -27,14 +32,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  topBoxContainer: {
-    width: '100%',
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    padding: 20,
+    flex: 1,
     alignItems: 'center',
-    position: 'absolute', // Position it at the top
-    top: 50,              // Distance from the top of the screen
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   separator: {
@@ -43,14 +49,12 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   infoParagraph:{
-    fontSize: 18,
+    fontSize: 28,
     textAlign: 'center',
   },
-  box: {
-    width: 1000,       // Adjust as needed
-    height: 100,      // Adjust as needed
-    backgroundColor: '#8c8787', // Dark grey color
-    borderRadius: 10, // Optional: adds rounded corners
-
+  background: {
+    flex: 1, // Make the background cover the entire screen
+    justifyContent: 'center', // Align the content
+    alignItems: 'center', // Align the content
   },
 });
