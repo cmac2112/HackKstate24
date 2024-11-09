@@ -1,23 +1,12 @@
-import React, {useState, useEffect} from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Button, Linking } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-//import { Notifications } from "react-native-notifications";
-import { NavigationContainer } from '@react-navigation/native';
 import MapViewDirections from 'react-native-maps-directions';
-import * as Notifications from 'expo-notifications'
+import axios from 'axios';
+
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || '';
-import axios from 'axios'
 
-
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
-
-
+const MapScreen = () => {
   interface Place {
     geometry: {
       location: {
@@ -28,14 +17,10 @@ Notifications.setNotificationHandler({
     name: string;
     vicinity: string;
   }
-
-
-const three = () => {
-    
-    const [places, setPlaces] = useState<Place[]>([])
-    const origin = { latitude: 37.78825, longitude: -122.4324 }; // Replace with your origin coordinates
-  const destination = { latitude: 37.7749, longitude: -100.4194 };
-
+  
+  const [places, setPlaces] = useState<Place[]>([]);
+  const origin = { latitude: 37.78825, longitude: -122.4324 }; // Replace with your origin coordinates
+  const [destination, setDestination] = useState({ latitude: 37.7749, longitude: -122.4194 })
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
@@ -49,22 +34,14 @@ const three = () => {
     };
 
     fetchPlaces();
-
-    Notifications.requestPermissionsAsync()
   }, []);
 
-  const sendLocalNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Local Notification",
-        body: "This is a local notification",
-        sound: "default",
-      },
-      trigger: null, // Immediately trigger the notification
-    });
+  const openGoogleMaps = () => {
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&travelmode=driving`;
+    Linking.openURL(url);
   };
+
   return (
-    <NavigationContainer independent={true}>
     <View style={styles.container}>
       <MapView
         style={styles.map}
@@ -93,20 +70,23 @@ const three = () => {
           strokeColor="hotpink"
         />
         {places.map((place, index) => (
-            <Marker
-              key={index}
-              coordinate={{
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: place.geometry.location.lat,
+              longitude: place.geometry.location.lng,
+            }}
+            title={place.name}
+            description={place.vicinity}
+            onPress={() => setDestination({
                 latitude: place.geometry.location.lat,
-                longitude: place.geometry.location.lng,
-              }}
-              title={place.name}
-              description={place.vicinity}
-            />
-          ))}
+                longitude: place.geometry.location.lng
+            })}
+          />
+        ))}
       </MapView>
-      <Button title="sent notification" onPress={sendLocalNotification} />
+      <Button title="Open in Google Maps" onPress={openGoogleMaps} />
     </View>
-    </NavigationContainer>
   );
 };
 
@@ -116,19 +96,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
   map: {
     width: "100%",
-    height: 400,
+    height: 400
   },
 });
 
-export default three;
+export default MapScreen;
