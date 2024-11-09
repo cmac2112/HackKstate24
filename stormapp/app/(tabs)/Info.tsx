@@ -13,9 +13,11 @@ export default function TabOneScreen() {
       <Text style={styles.title}>About the App</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       
-      <Text style ={styles.infoParagraph}>The app monitors severe weather in your area and alerts you if you're at risk, 
-        guiding you to the nearest shelter with clear, real-time directions. Stay prepared 
-        and safe with this app. </Text>
+      <Text style={styles.infoParagraph}>
+        The app monitors <Text style={{ fontWeight: 'bold' }}>severe weather</Text> in your area and alerts you if you're at risk,
+        guiding you to the nearest shelter with clear, real-time directions. Stay prepared
+        and safe with this app.
+      </Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
       <Text style = {styles.infoParagraph}>

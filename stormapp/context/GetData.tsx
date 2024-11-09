@@ -138,6 +138,7 @@ export const WeatherProvider: React.FC<WeatherProviderProps> = ({
       setWarningPolygons(severePolygons);
       severePolygons.forEach((element) => {
         console.log(element);
+        console.log("Severe Polygons: "+severePolygons);
       });
     } catch (error) {
       console.error("Error fetching weather warnings:", error);
@@ -217,3 +218,12 @@ export const WeatherProvider: React.FC<WeatherProviderProps> = ({
     </WeatherContext.Provider>
   );
 };
+
+function CheckForStorm(minX: number, minY: number, maxX: number, maxY: number, locationX: number, locationY: number){
+if(locationX >= minX && locationX <= maxX && locationY >= minY && locationY <= maxY){
+  return true;
+}
+else{
+  return false;
+}
+}

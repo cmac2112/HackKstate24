@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Button, Platform, PermissionsAndroid, Linking }
 import * as Location from 'expo-location';
 import { WeatherProvider } from '@/context/GetData';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import {TouchableOpacity } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { useEffect } from 'react';
 import { useWeather } from '@/context/GetData';
@@ -72,7 +72,7 @@ export default function TabOneScreen() {
     setButtonColor((prevColor) => (prevColor === '#007bff' ? '#ffd700' : '#007bff'));
     setInfoText((prevText) => 
       prevText === 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!' 
-        ? 'We will notify you when you are inside of a storm warned area and help you find the nearest shelter.'
+        ? 'We will notify you when you are inside of a storm warning area and help you find the nearest shelter.'
         : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'
     );
   
@@ -90,23 +90,18 @@ export default function TabOneScreen() {
   };
 
   return (
-    <WeatherProvider>
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab  testsrio</Text>
-      <View style={styles.separator} />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
     <ImageBackground
       source={require('./assets/HomeBackground.png')} // Path to your PNG image
       style={styles.background}
     >
     <View style={styles.overlay}>
       <Text style={styles.title}>Storm Watch</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="white" />
+      <View style={styles.separator}/>
 
       <Text style={styles.infoParagraph}>
       {infoText}
       </Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="white" />
+      <View style={styles.separator}/>
 
       <Text style={styles.infoParagraph2}>{WatchBegins}</Text>
       <TouchableOpacity
@@ -116,7 +111,6 @@ export default function TabOneScreen() {
         <Text style={styles.buttonText}>{ButtonText}</Text>
       </TouchableOpacity>
     </View>
-    </WeatherProvider>
     </ImageBackground>
   );
 }
@@ -142,6 +136,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
+    color: 'white'
   },
   separator: {
     marginVertical: 30,
@@ -149,6 +144,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   infoParagraph:{
+    color: 'white',
     fontSize: 28,
     textAlign: 'center',
   },
@@ -156,6 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     fontStyle: 'italic',
+    color: 'white'
   },
   button: {
     paddingVertical: 12,
