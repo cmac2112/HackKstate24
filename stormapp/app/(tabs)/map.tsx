@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, Button, Platform, PermissionsAndroid, Linking }
 import MapView, { Marker } from "react-native-maps";
 import * as Notifications from 'expo-notifications';
 import MapViewDirections from 'react-native-maps-directions';
-import { Audio } from "expo-av";
 import { useWeather } from "../../context/GetData";
+import {ImageBackground} from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,7 +18,7 @@ Notifications.setNotificationHandler({
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 
 const MapScreen = () => {
-  const { weatherWarnings, setArea, fetchWeatherWarnings, places, setPlaces, destination, setDestination, origin, setOrigin, errorMsg, setDemoPolygon} = useWeather();
+  const { places, destination, setDestination, origin, errorMsg, setDemoPolygon} = useWeather();
 
 
 
@@ -28,12 +28,11 @@ const MapScreen = () => {
   };
 
   return (
-    
     <View style={styles.container}>
       {origin.latitude !== null && origin.longitude !== null && places.length > 0 ? (
         <>
         <Text style={styles.text}>Tap on a place to set it as your destination</Text>
-        <Text style={styles.disclaimer}>These are possible shelter places in this area, use your best judement</Text>
+        <Text style={styles.disclaimer}>These are possible shelter places in this area, ALWAYS use your best judement</Text>
           <MapView
           style={styles.map}
           initialRegion={{
@@ -79,9 +78,7 @@ const MapScreen = () => {
             />
           ))}
         </MapView>
-      <Button title="Open in Google Maps" onPress={openGoogleMaps} />
-      <Button title="Set Area" onPress={() => setArea('OK')} />
-      <Button title="check for warnings" onPress={() => fetchWeatherWarnings()} />
+      {destination.latitude && (<Button title="Open in Google Maps" onPress={openGoogleMaps} />)}
       <Button title="Start demo" onPress={() => {
             const demoPolygon = [
               [-96.578, 39.188], // Bottom-left
@@ -97,7 +94,6 @@ const MapScreen = () => {
       ) : (
         <Text style={styles.text}>{errorMsg ? `Error: ${errorMsg}` : "Getting Location and nearby places..."}</Text>
       )}
-      
     </View>
   );
 };
@@ -123,7 +119,7 @@ const styles = StyleSheet.create({
     color: "yellow",
     textAlign: "center",
     padding: 5,
-  }
+  },
 });
 
 export default MapScreen;

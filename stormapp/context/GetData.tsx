@@ -1,11 +1,11 @@
 import React, { createContext, useEffect, useContext, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import * as BackgroundFetch from "expo-background-fetch";
 import { Audio } from "expo-av";
 
-/*
+
 const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
 
 TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async () => {
@@ -26,7 +26,7 @@ TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async () => {
   // Play the custom sound
   await sound.playAsync();
 });
-*/
+
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 
 Notifications.setNotificationHandler({
@@ -97,7 +97,7 @@ export const WeatherProvider: React.FC<WeatherProviderProps> = ({
   children,
 }) => {
   const [weatherWarnings, setWeatherWarnings] = useState<WeatherWarning[]>([]);
-  const [area, setArea] = useState<string>("OK");
+  const [area, setArea] = useState<string>("KS");
   const [warningPolygons, setWarningPolygons] = useState<number[][]>([]);
   const [origin, setOrigin] = useState<Origin>({
     latitude: null,
@@ -260,10 +260,13 @@ console.log('new polygons', severePolygons);
     const fetchPlaces = async () => {
       if (origin.latitude && origin.longitude) {
         try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${origin.latitude},${origin.longitude}&radius=10000&type=local_government_office&key=${GOOGLE_API_KEY}`
-          );
-          setPlaces(response.data.results);
+          const types = ["school", "local_government_office", "hospital", "shelter"]
+        const requests = types.map(type => axios.get(
+          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${origin.latitude},${origin.longitude}&radius=10000&type=${type}&key=${GOOGLE_API_KEY}`
+        ));
+        const responses = await Promise.all(requests);
+        const allPlaces: Place[] = responses.flatMap((response: AxiosResponse<{ results: Place[] }>) => response.data.results);
+          setPlaces(allPlaces);
         } catch (error) {
           console.error("Error fetching places:", error);
         }

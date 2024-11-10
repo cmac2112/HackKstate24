@@ -1,6 +1,5 @@
-import { StyleSheet } from 'react-native';
-import {ImageBackground, Image } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
+import { StyleSheet, ScrollView } from 'react-native';
+import {ImageBackground, Image, Linking } from 'react-native';
 import { Text, View } from '@/components/Themed';
 
 export default function TabOneScreen() {
@@ -9,6 +8,7 @@ export default function TabOneScreen() {
       source={require('./assets/storm.png')} // Path to your PNG image
       style={styles.background}
     >
+      <ScrollView style={styles.scrollViewContent}>
     <View style={styles.overlay}>
       <Text style={styles.title}>About the App</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -21,9 +21,30 @@ export default function TabOneScreen() {
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
       <Text style = {styles.infoParagraph}>
-      Leave the App running in the background to get notifications.
+      About our Team
       </Text>
+      
+        <Image source={require('../../assets/images/caden.jpg')} style={styles.img} />
+        <Text style={styles.aboutme}>
+        Caden McArthur
+        </Text>
+        <Text style={styles.aboutme}>
+        CS @ Bethel College | NASA Space Apps Award Winner | President of Bethel Software Club | C/o 2025. 
+        Experienced React developer with a demonstrated history of working in the computer software industry at EX Fortune 500 companies. Strong engineering professional with a Bachelor of Science - BS focused in Computer Science from Bethel College.
+          </Text>
+          <Text style={styles.link} onPress={() => Linking.openURL('https://www.linkedin.com/in/cadenmcarthur')}>
+        Connect With Me On Linked In
+      </Text>
+        <Text style={styles.aboutme}>
+          Micah Quinlin
+        </Text>
+        
+        <Image source={require('../../assets/images/micah.jpg')} style={styles.img} />
+        <Text style={styles.aboutme}>
+        Hello, my name is Micah Quinlin and I am a software development major at Bethel College, with a minor in mathematics and psychology. I am graduating in december 2024 and am responsible for the frontend of Sky Watch.
+        </Text>
     </View>
+    </ScrollView>
     </ImageBackground>
   );
 }
@@ -58,5 +79,22 @@ const styles = StyleSheet.create({
     flex: 1, // Make the background cover the entire screen
     justifyContent: 'center', // Align the content
     alignItems: 'center', // Align the content
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  aboutme: {
+    fontSize: 15,
+    textAlign: 'center',
+    paddingTop: 10,
+  },
+  img:{
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+  },
+  link: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });

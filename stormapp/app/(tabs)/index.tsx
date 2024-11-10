@@ -1,14 +1,14 @@
 import { StyleSheet, View, Text, Button, Platform, PermissionsAndroid, Linking } from "react-native";
 import * as Location from 'expo-location';
 import { WeatherProvider } from '@/context/GetData';
-import React, { useState } from 'react';
+import React from 'react';
 import {TouchableOpacity } from 'react-native';
 import { useEffect } from 'react';
 import { useWeather } from '@/context/GetData';
-import {ImageBackground, Image } from 'react-native';
+import {ImageBackground} from 'react-native';
 
 export default function TabOneScreen() {
-  const { setOrigin, setErrorMsg, watching, setWatching } = useWeather();
+  const { setOrigin, setErrorMsg, watching, setWatching, setArea, area } = useWeather();
 
   useEffect(() => {
     //sendLocalNotification();
@@ -59,34 +59,31 @@ export default function TabOneScreen() {
     console.log(watching)
   }, [watching]);
 
-//<View style={styles.overlay}>
   return (
+    <WeatherProvider>
     <ImageBackground
       source={require('./assets/HomeBackground.png')} // Path to your PNG image
       style={styles.background}
     >
     
       <Text style={styles.title}>Sky Watch</Text>
+      {watching ? <Text style={styles.active}>Active</Text> : <Text style={styles.inactive}>Inactive</Text>}
       <View style={styles.separator}/>
 
       <Text style={styles.infoParagraph}>
-      {watching ? 'We will now notify you when you are inside of a storm warning area and help you find the nearest shelter.' : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'}
+      {watching ? 'We will now notify you when you are inside of a Severe Level storm warning area and help you find the nearest shelter.' : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'}
       </Text>
       <View style={styles.separator}/>
-
+    {watching && <Text style={styles.infoParagraph2}>Leave this app running in the background, we will take care of the rest!</Text>}
       <TouchableOpacity
         style={[styles.button, { backgroundColor: watching ? '#ffd700' : '#007bff' }]}
         onPress={()=>setWatching(!watching)}
       >
-        <Text style={styles.buttonText}>{watching ? 'Our Watch Has Begun' : 'Start Our Watch'}</Text>
+       
+        <Text style={styles.buttonText}>{watching ? 'And Now Our Watch Begins' : 'Start Your Watch'}</Text>
       </TouchableOpacity>
-    <WeatherProvider>
-    <View style={styles.container}>
-
-      <View style={styles.separator} />
-    </View>
-    </WeatherProvider>
     </ImageBackground>
+    </WeatherProvider>
   );
 }
 
@@ -122,6 +119,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 28,
     textAlign: 'center',
+    padding: 20,
   },
   infoParagraph2:{
     fontSize: 24,
@@ -140,4 +138,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  picker: {
+    height: 50,
+    width: 200,
+    color: 'white',
+    opacity: 1,
+  },
+  active:{
+    color: 'green',
+    fontSize: 30,
+  },
+  inactive:{
+    color: 'yellow',
+    fontSize: 30,
+  }
 });
