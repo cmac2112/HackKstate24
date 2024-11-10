@@ -6,10 +6,9 @@ import { useEffect } from 'react';
 import { useWeather } from '@/context/GetData';
 
 export default function TabOneScreen() {
-  const { origin, setOrigin, setErrorMsg, sendLocalNotification } = useWeather();
+  const { setOrigin, setErrorMsg } = useWeather();
 
   useEffect(() => {
-    sendLocalNotification();
     const requestLocationPermission = async () => {
       try {
         if (Platform.OS === 'android') {
@@ -43,6 +42,7 @@ export default function TabOneScreen() {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
         });
+        
       } catch (error) {
         console.error("Error getting location permission or fetching location:", error);
         if (error instanceof Error) {

@@ -18,26 +18,9 @@ Notifications.setNotificationHandler({
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 
 const MapScreen = () => {
-  const { weatherWarnings, setArea, fetchWeatherWarnings, places, setPlaces, destination, setDestination, origin, setOrigin, errorMsg } = useWeather();
+  const { weatherWarnings, setArea, fetchWeatherWarnings, places, setPlaces, destination, setDestination, origin, setOrigin, errorMsg, setDemoPolygon} = useWeather();
 
 
-  const sendLocalNotification = async () => {
-    const { sound } = await Audio.Sound.createAsync(
-      require('../../assets/sounds/audio.mp3')
-    );
-  
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Warning",
-        body: "The NWS has issued a warning for your area",
-        sound: '../../assets/sounds/audio.mp3', // Use the local path to the sound file
-      },
-      trigger: null, // Immediately trigger the notification
-    });
-  
-    // Play the sound
-    await sound.playAsync();
-  }
 
   const openGoogleMaps = () => {
     const url = `https://www.google.com/maps/dir/?api=1&origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&travelmode=driving`;
@@ -96,10 +79,19 @@ const MapScreen = () => {
             />
           ))}
         </MapView>
-      <Button title="Send Local Notification" onPress={sendLocalNotification} />
       <Button title="Open in Google Maps" onPress={openGoogleMaps} />
       <Button title="Set Area" onPress={() => setArea('OK')} />
       <Button title="check for warnings" onPress={() => fetchWeatherWarnings()} />
+      <Button title="Start demo" onPress={() => {
+            const demoPolygon = [
+              [-96.578, 39.188], // Bottom-left
+              [-96.576, 39.188], // Bottom-right
+              [-96.576, 39.190], // Top-right
+              [-96.578, 39.190], // Top-left
+              [-96.578, 39.188]  // Closing the polygon
+            ];
+            setTimeout(() => {setDemoPolygon(demoPolygon)}, 1000);
+          }}/>
         </>
         
       ) : (
