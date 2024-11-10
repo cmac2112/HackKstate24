@@ -5,7 +5,7 @@ import React from 'react';
 import {TouchableOpacity } from 'react-native';
 import { useEffect } from 'react';
 import { useWeather } from '@/context/GetData';
-import {ImageBackground} from 'react-native';
+import {ImageBackground, Image} from 'react-native';
 
 export default function TabOneScreen() {
   const { setOrigin, setErrorMsg, watching, setWatching, setArea, area } = useWeather();
@@ -65,11 +65,8 @@ export default function TabOneScreen() {
       source={require('./assets/HomeBackground.png')} // Path to your PNG image
       style={styles.background}
     >
-    
       <Text style={styles.title}>Sky Watch</Text>
       {watching ? <Text style={styles.active}>Active</Text> : <Text style={styles.inactive}>Inactive</Text>}
-      <View style={styles.separator}/>
-
       <Text style={styles.infoParagraph}>
       {watching ? 'We will now notify you when you are inside of a Severe Level storm warning area and help you find the nearest shelter.' : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'}
       </Text>
@@ -122,16 +119,17 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   infoParagraph2:{
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'center',
     fontStyle: 'italic',
-    color: 'white'
+    color: 'white',
+    paddingHorizontal: 20,
   },
   button: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
@@ -151,5 +149,5 @@ const styles = StyleSheet.create({
   inactive:{
     color: 'yellow',
     fontSize: 30,
-  }
+  },
 });
