@@ -62,6 +62,8 @@ interface WeatherContextType {
   setDemoPolygon: (demoPolygons: number[][]) => void;
   watching: boolean;
   setWatching: (watching: boolean) => void;
+  warning: boolean;
+  setWarning: (warning: boolean) => void;
 }
 
 interface Place {
@@ -288,19 +290,7 @@ console.log('new polygons', severePolygons);
     // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, [area]);
-  /*
-  useEffect(() => {
-    const registerBackgroundTask = async () => {
-      await BackgroundFetch.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK, {
-        minimumInterval: 5, // 1 minute
-        stopOnTerminate: false,
-        startOnBoot: true,
-      });
-    };
-
-    registerBackgroundTask();
-  }, []);
-  */
+  
   return (
     <WeatherContext.Provider
       value={{
@@ -319,6 +309,8 @@ console.log('new polygons', severePolygons);
         setDemoPolygon,
         watching,
         setWatching,
+        warning,
+        setWarning
       }}
     >
       {children}

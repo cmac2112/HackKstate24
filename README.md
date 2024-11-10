@@ -33,3 +33,6 @@ or in an area that you are not familiar with.
 We used the national weather service to get the severe weather warning zones. Then we compare those zones with your location and if you are in a severe weather warning zone, it will alert you and give you directions to the nearest safehouse, which we got the locations from Google map places.
 
 We used react native to devolp this app. Neither of us were familar with it and learned the basics over the weekend. 
+
+what does it solve? 
+how does it do it?
