@@ -3,16 +3,15 @@ import * as Location from 'expo-location';
 import { WeatherProvider } from '@/context/GetData';
 import React, { useState } from 'react';
 import {TouchableOpacity } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { useEffect } from 'react';
 import { useWeather } from '@/context/GetData';
 import {ImageBackground, Image } from 'react-native';
 
 export default function TabOneScreen() {
-  const { origin, setOrigin, setErrorMsg, sendLocalNotification } = useWeather();
+  const { setOrigin, setErrorMsg, watching, setWatching } = useWeather();
 
   useEffect(() => {
-    sendLocalNotification();
+    //sendLocalNotification();
     const requestLocationPermission = async () => {
       try {
         if (Platform.OS === 'android') {
@@ -57,60 +56,36 @@ export default function TabOneScreen() {
     };
 
     requestLocationPermission();
-  }, []);
-  const [buttonColor, setButtonColor] = useState('#007bff'); // Initial blue color
-  const [infoText, setInfoText] = useState(
-    'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'
-  );
+    console.log(watching)
+  }, [watching]);
 
-  const [ButtonText, setButtonText] = useState(
-  'Start The Watch');
-
-  const[WatchBegins, setWatchBegins] = useState('');
-
-  const handlePress = () => {
-    setButtonColor((prevColor) => (prevColor === '#007bff' ? '#ffd700' : '#007bff'));
-    setInfoText((prevText) => 
-      prevText === 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!' 
-        ? 'We will notify you when you are inside of a storm warning area and help you find the nearest shelter.'
-        : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'
-    );
-  
-    setButtonText((prevText) => 
-      prevText === 'Start The Watch' 
-        ? 'Our watch has begun' 
-        : 'Start The Watch'
-    );
-
-    setWatchBegins((prevText) =>
-      prevText === ''
-      ? 'And Now Our Watch Begins'
-      : ''
-    );
-  };
-
+//<View style={styles.overlay}>
   return (
     <ImageBackground
       source={require('./assets/HomeBackground.png')} // Path to your PNG image
       style={styles.background}
     >
-    <View style={styles.overlay}>
-      <Text style={styles.title}>Storm Watch</Text>
+    
+      <Text style={styles.title}>Sky Watch</Text>
       <View style={styles.separator}/>
 
       <Text style={styles.infoParagraph}>
-      {infoText}
+      {watching ? 'We will now notify you when you are inside of a storm warning area and help you find the nearest shelter.' : 'In an unfamiliar place with storms in the area? Let us guide you to local shelters in the area in an event of a warning!'}
       </Text>
       <View style={styles.separator}/>
 
-      <Text style={styles.infoParagraph2}>{WatchBegins}</Text>
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: buttonColor }]}
-        onPress={handlePress}
+        style={[styles.button, { backgroundColor: watching ? '#ffd700' : '#007bff' }]}
+        onPress={()=>setWatching(!watching)}
       >
-        <Text style={styles.buttonText}>{ButtonText}</Text>
+        <Text style={styles.buttonText}>{watching ? 'Our Watch Has Begun' : 'Start Our Watch'}</Text>
       </TouchableOpacity>
+    <WeatherProvider>
+    <View style={styles.container}>
+
+      <View style={styles.separator} />
     </View>
+    </WeatherProvider>
     </ImageBackground>
   );
 }
